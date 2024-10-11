@@ -13,6 +13,8 @@ int rounds;
 int answer;
 int lives;
 
+bool exitProgram = false;
+
 int diffSelector() {
         bool debounce = false;
         int retries = 0;
@@ -45,6 +47,7 @@ int diffSelector() {
 
         if (retries == RETRY_MAX) {
                 cout << "Too many attempts. Exiting program." << endl;
+                exitProgram = true;
         }
 
         return 0;
@@ -62,7 +65,7 @@ int roundsSelector() {
                         << "(MIN = " << ROUNDS_MIN << ")" << endl;
                 cin >> rounds;
                 
-                if (rounds < ROUNDS_MAX && rounds > ROUNDS_MIN) {
+                if (rounds <= ROUNDS_MAX && rounds >= ROUNDS_MIN) {
                         cout << "You will play " << rounds << " rounds." << endl;
                 } else if (rounds < ROUNDS_MIN) {
                         cout << "You want to play too few rounds. Try again." << endl;
@@ -84,6 +87,7 @@ int roundsSelector() {
 
         if (retries == RETRY_MAX) {
                 cout << "Too many attempts. Exiting program." << endl;
+                exitProgram = true;
         }
 
         return 0;
@@ -94,13 +98,12 @@ int genAnswer() {
 
         if (difficulty == 1) {
                 answer = rand() % 50 + 1;
-                cout << "DEBUG: The answer is " << answer << endl;
         } else if (difficulty == 2) {
                 answer = rand() % 100 + 1;
-                cout << "DEBUG: The answer is " << answer << endl;
-        } else {
+        } else if (difficulty == 3) {
                 answer = rand() % 150 + 1;
-                cout << "DEBUG: The answer is " << answer << endl;
+        } else {
+                cout << "Invalid difficulty: " << difficulty << endl;
         }
 
         return 0;
@@ -122,12 +125,32 @@ int main() {
         bool hasWon = false;
 
         diffSelector();
+        if (exitProgram == true) {
+                cout << "Missing critical values. Exiting program." << endl;
+
+                return 0;
+        }
         roundsSelector();
+        if (exitProgram == true) {
+                cout << "Missing critical values. Exiting program." << endl;
+
+                return 0;
+        }
 
         for (rounds; rounds > 0; rounds--) {
                 genAnswer();
 
+                if (lives < 0) {
+                        break;
+                }
+
                 for (lives; lives > 0 || rounds > 0; lives--) {
+                        if (lives < 0) {
+                                break;
+                        }
+                        
+                        cout << "DEBUG: The answer is " << answer << endl;
+                        
                         int guess = getGuess();
                         
                         if (guess == answer) {
@@ -144,6 +167,12 @@ int main() {
                         } else {
                                 cout << "You have not entered a valid number.";
                                 lives += 1;
+                        }
+
+                        if (lives > 0) {
+                                cout << "You have " << lives << " live left!" << endl;
+                        } else {
+                                cout << "No lives left! Game over!" << endl;
                         }
                 }
         }
