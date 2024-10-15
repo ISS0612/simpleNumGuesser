@@ -172,7 +172,7 @@ int main() {
                         if (lives > 0) {
                                 cout << "You have " << lives << " live left!" << endl;
                         } else {
-                                cout << "No lives left! Game over!" << endl;
+                                cout << "No lives left! Game over!" << endl << "The answer was " << answer << endl;
                         }
                 }
         }
