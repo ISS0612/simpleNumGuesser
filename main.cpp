@@ -149,7 +149,7 @@ int main() {
                                 break;
                         }
                         
-                        cout << "DEBUG: The answer is " << answer << endl;
+                        // cout << "DEBUG: The answer is " << answer << endl;
                         
                         int guess = getGuess();
                         
